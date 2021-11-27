@@ -4,6 +4,10 @@ import Calendar from '../components/Calendar'
 const routes = [
   {
     path: '/',
+    redirect: '/',
+  },
+  {
+    path: '/full-calendar',
     component: Calendar,
   },
 ]

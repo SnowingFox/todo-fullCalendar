@@ -73,7 +73,6 @@ function handlerSelect(payload) {
       addDayEvent(payload, ctx)
     },
     function () {},
-    function () {},
     {
       type: 'textarea',
       confirmText: '确定',
@@ -81,32 +80,21 @@ function handlerSelect(payload) {
     }
   )
 }
-function handlerEventClick(payload) {
-  function handleKeydown(e) {
-    if (e.code === 'Delete') {
-      deleteEvent(payload)
-      payload = null
-    }
-  }
-  document.addEventListener('keydown', handleKeydown)
 
+function handlerEventClick(payload) {
   mdui.prompt(
-    ' 是不是要重新安排一下呢？φ(゜▽゜*)♪ (按下Delete键可删除这个时间段噢)',
-    '重新计划',
+    '是不是要重新安排一下呢？φ(゜▽゜*)♪',
+    '重新安排',
     function (value) {
-      document.removeEventListener('keydown', handleKeydown, true)
-      if (payload) {
-        setEventCtx(payload, value)
-      }
+      setEventCtx(payload, value)
     },
-    function (value) {
-      document.removeEventListener('keydown', handleKeydown, true)
+    function () {
+      deleteEvent(payload)
     },
     {
-      type: 'textarea',
-      confirmText: '确定',
-      cancelText: '取消',
       defaultValue: payload.event._def.title,
+      cancelText: '删除',
+      confirmText: '确定',
     }
   )
 }
