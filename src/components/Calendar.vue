@@ -2,10 +2,10 @@
   <FullCalendar :options="calendarOptions" />
 </template>
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import mdui from 'mdui'
 import * as types from './day-types'
-import useEvent from './use-event'
+import useEvent, { deleteEvent } from './use-event'
 import '@fullcalendar/core/vdom' // solves problem with Vite
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -13,9 +13,11 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { useStore } from 'vuex'
 
-const { addDayEvent, addWeekEvent, addMonthEvent, setEventCtx } = useEvent()
+const { addDayEvent, setEventCtx } = useEvent()
 
 const store = useStore()
+const title = ref('')
+const content = ref('')
 const calendarOptions = computed(() => {
   return {
     ...configOptions(),
@@ -64,41 +66,49 @@ function configOptions() {
 }
 
 function handlerSelect(payload) {
-  const type = payload.view.type
-  if (type === types.DAY) {
-    mdui.prompt(
-      '请安排一下今天的这个时间段想做些什么吧 (๑•̀ㅂ•́)و✧~',
-      function (ctx) {
-        addDayEvent(payload, ctx)
-      }
-    )
-  }
-  if (type === types.WEEK) {
-    addWeekEvent(payload)
-  }
-
-  if (type === types.MONTH) {
-    addMonthEvent(payload)
-  }
+  mdui.prompt(
+    '请安排一下今天的这个时间段想做些什么吧 (๑•̀ㅂ•́)و✧~',
+    '重新计划',
+    function (ctx) {
+      addDayEvent(payload, ctx)
+    },
+    function () {},
+    function () {},
+    {
+      type: 'textarea',
+      confirmText: '确定',
+      cancelText: '取消',
+    }
+  )
 }
 function handlerEventClick(payload) {
-  const type = payload.view.type
-  payload.event._def.title = '高数'
-  if (type === types.DAY) {
-    mdui.prompt(
-      ' 是不是觉得安排的不妥当要重新修改呀？( =•ω•= )m',
-      function (ctx) {
-        setEventCtx(payload.event._def, ctx)
-      }
-    )
+  function handleKeydown(e) {
+    if (e.code === 'Delete') {
+      deleteEvent(payload)
+      payload = null
+    }
   }
-  if (type === types.WEEK) {
-    addWeekEvent(payload)
-  }
+  document.addEventListener('keydown', handleKeydown)
 
-  if (type === types.MONTH) {
-    addMonthEvent(payload)
-  }
+  mdui.prompt(
+    ' 是不是要重新安排一下呢？φ(゜▽゜*)♪ (按下Delete键可删除这个时间段噢)',
+    '重新计划',
+    function (value) {
+      document.removeEventListener('keydown', handleKeydown, true)
+      if (payload) {
+        setEventCtx(payload, value)
+      }
+    },
+    function (value) {
+      document.removeEventListener('keydown', handleKeydown, true)
+    },
+    {
+      type: 'textarea',
+      confirmText: '确定',
+      cancelText: '取消',
+      defaultValue: payload.event._def.title,
+    }
+  )
 }
 function handlerEventDrop(payload) {}
 function handlerEvent(events) {

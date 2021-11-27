@@ -6,9 +6,7 @@ export default function useEvent() {
   const store = useStore()
   const events = computed(() => store.state.events)
   function addDayEvent(payload, ctx) {
-    const id = events.value.length
     const event = {
-      id,
       start: payload.start,
       end: payload.end,
       title: ctx,
@@ -17,22 +15,19 @@ export default function useEvent() {
     addEvents(event)
   }
 
-  function addWeekEvent(payload) {}
-
-  function addMonthEvent(payload) {}
-
   function addEvents(event) {
     store.dispatch('addEvent', event)
   }
   function setEventCtx(payload, ctx) {
-    payload.event._def.title = ctx
-    console.log(payload.event._def.title)
+    payload.event.setProp('title', ctx)
   }
 
   return {
     addDayEvent,
-    addWeekEvent,
-    addMonthEvent,
     setEventCtx,
   }
+}
+
+export function deleteEvent(payload) {
+  payload.event.remove()
 }
