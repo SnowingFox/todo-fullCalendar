@@ -24,12 +24,15 @@ export default function useEvent() {
   function addEvents(event) {
     store.dispatch('addEvent', event)
   }
-  function setCtxById(event, ctx) {}
+  function setEventCtx(payload, ctx) {
+    payload.event._def.title = ctx
+    console.log(payload.event._def.title)
+  }
 
   return {
     addDayEvent,
     addWeekEvent,
     addMonthEvent,
-    setCtxById,
+    setEventCtx,
   }
 }

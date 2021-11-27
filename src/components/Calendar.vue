@@ -13,7 +13,7 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { useStore } from 'vuex'
 
-const { addDayEvent, addWeekEvent, addMonthEvent, setCtxById } = useEvent()
+const { addDayEvent, addWeekEvent, addMonthEvent, setEventCtx } = useEvent()
 
 const store = useStore()
 const calendarOptions = computed(() => {
@@ -60,7 +60,6 @@ function configOptions() {
 
       hour12: false, //设置时间为24小时
     },
-    events: [],
   }
 }
 
@@ -84,12 +83,12 @@ function handlerSelect(payload) {
 }
 function handlerEventClick(payload) {
   const type = payload.view.type
-  console.log(payload)
+  payload.event._def.title = '高数'
   if (type === types.DAY) {
     mdui.prompt(
       ' 是不是觉得安排的不妥当要重新修改呀？( =•ω•= )m',
       function (ctx) {
-        setCtxById(payload, ctx)
+        setEventCtx(payload.event._def, ctx)
       }
     )
   }
