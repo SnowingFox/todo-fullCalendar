@@ -1,3 +1,3 @@
 module.exports = {
-  publicPath: '/todo-fullcalendar',
+  publicPath: '/todo-fullCalendar/',
 }
