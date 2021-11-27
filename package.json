@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "commit": "git-cz"
   },
   "dependencies": {
     "@fullcalendar/core": "^5.10.1",
@@ -27,7 +28,15 @@
     "@vue/compiler-sfc": "^3.0.0",
     "prettier": "^2.5.0",
     "sass": "^1.26.5",
-    "sass-loader": "^8.0.2"
+    "sass-loader": "^8.0.2",
+    "@commitlint/cli": "^7.1.2",
+    "@commitlint/config-conventional": "^7.1.2",
+    "commitizen": "^3.0.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    }
   },
   "browserslist": [
     "> 1%",
