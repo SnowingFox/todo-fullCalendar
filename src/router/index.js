@@ -4,7 +4,7 @@ import Calendar from '../components/Calendar'
 const routes = [
   {
     path: '/',
-    redirect: '/',
+    redirect: '/full-calendar',
   },
   {
     path: '/full-calendar',
